@@ -16,10 +16,12 @@ const TripDetails = (props) => {
       const tripData = await tripService.show(tripId);
       setTrip(tripData);
 
-      const entries = await logEntryService.index(tripId);
-      setLogEntries(entries);
+      const logEntries = await logEntryService.indexLogsInTrip(tripId);
+      setLogEntries(logEntries);
     };
-    fetchTripDetails();
+    if (user) {
+      fetchTripDetails();
+    }
   }, [tripId, user]);
 
   if (!trip) return <main>Loading...</main>;
@@ -30,7 +32,7 @@ const TripDetails = (props) => {
         <p>{trip.destination}</p>
         <p>{trip.type}</p>
         <p>
-          {trip.author.username} posted on
+          {trip.author?.username} posted on
           <br />
           {new Date(trip.createdAt).toLocaleDateString()}
         </p>
@@ -45,8 +47,7 @@ const TripDetails = (props) => {
 
       <section>
         <h2>Entry Logs</h2>
-        <LogEntriesList  logEntries={logEntries} />
-        <Link to={`/logEntries/new?tripId=${tripId}`}>Add Log Entry</Link>
+        <LogEntriesList trip={trip} logEntries={logEntries} />
       </section>
     </main>
   );

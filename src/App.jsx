@@ -1,5 +1,5 @@
 import { useState, createContext, useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useParams } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar";
 import Landing from "./components/Landing/Landing";
 import Dashboard from "./components/Dashboard/Dashboard";
@@ -9,6 +9,7 @@ import TripsList from "./components/TripsList/TripsList";
 import TripDetails from "./components/TripDetails/TripDetails";
 import TripForm from "./components/TripForm/TripForm";
 import LogEntriesList from "./components/LogEntriesList/LogEntriesList";
+import LogEntryDetails from "./components/LogEntryDetails/LogEntryDetails";
 import * as authService from "../src/services/authService";
 import * as tripService from "../src/services/tripService";
 import * as logEntryService from "../src/services/logEntryService";
@@ -19,6 +20,7 @@ const App = () => {
   const [user, setUser] = useState(authService.getUser());
   const [trips, setTrips] = useState([]);
   const [logEntries, setLogEntries] = useState([]);
+  const { tripId }  = useParams();
   const navigate = useNavigate();
 
   const handleSignout = () => {
@@ -27,7 +29,7 @@ const App = () => {
   };
 
   const handleAddTrip = async (tripFormData) => {
-    const newTrip = await tripService.createTrip(tripFormData);
+    const newTrip = await tripService.create(tripFormData);
     setTrips([...trips, newTrip]);
     navigate("/trips");
   };
@@ -50,18 +52,20 @@ const App = () => {
       const tripsData = await tripService.index();
       setTrips(tripsData);
     };
-
-    const fetchAllLogs = async () => {
-      const logEntriesData = await logEntryService.indexLogsInTrip();
-      console.log("logEntriesData:", logEntriesData);
-      setLogEntries(logEntriesData);
+  
+    const fetchLogs = async () => {
+      if (tripId) {
+        const logEntriesData = await logEntryService.indexLogsInTrip(tripId);
+        console.log("logEntriesData:", logEntriesData);
+        setLogEntries(logEntriesData);
+      }
     };
-
+  
     if (user) {
       fetchAllTrips();
-      fetchAllLogs();
+      fetchLogs();
     }
-  }, [user]);
+  }, [user, tripId]);
 
   return (
     <>
@@ -71,7 +75,7 @@ const App = () => {
           {user ? (
             <>
               <Route path="/" element={<Dashboard user={user} />} />
-              <Route path="/Trips" element={<TripsList trips={trips} />} />
+              <Route path="/Trips" element={<TripsList trips={trips} logEntries={logEntries} />} />
               <Route
                 path="/Trips/New"
                 element={<TripForm handleAddTrip={handleAddTrip} />}
@@ -85,8 +89,12 @@ const App = () => {
                 element={<TripForm handleUpdateTrip={handleUpdateTrip} />}
               />
               <Route
-                path="/Logs"
+                path="/LogEntries"
                 element={<LogEntriesList logEntries={logEntries} />}
+              />
+              <Route 
+              path="/LogEntries/:logEntryId" 
+              element={<LogEntryDetails logEntries={logEntries}/>} 
               />
             </>
           ) : (
