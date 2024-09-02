@@ -1,0 +1,55 @@
+import { useState, useEffect, useContext } from 'react';
+import { useParams, Link } from "react-router-dom";
+import { AuthedUserContext } from '../../App';
+import * as tripService from '../../services/tripService';
+import * as logEntryService from '../../services/logEntryService';
+import LogEntriesList from '../LogEntriesList/LogEntriesList';
+
+const TripDetails = (props) => {
+  const [trip, setTrip] = useState(null);
+  const [logEntries, setLogEntries] = useState([]);
+  const { tripId } = useParams();
+  const { user } = useContext(AuthedUserContext);
+
+  useEffect(() => {
+    const fetchTripDetails = async () => {
+      const tripData = await tripService.show(tripId);
+      setTrip(tripData);
+
+      const entries = await logEntryService.index(tripId);
+      setLogEntries(entries);
+    };
+    fetchTripDetails();
+  }, [tripId, user]);
+
+  if (!trip) return <main>Loading...</main>;
+
+  return (
+    <main>
+      <header>
+        <p>{trip.destination}</p>
+        <p>{trip.type}</p>
+        <p>
+          {trip.author.username} posted on
+          <br />
+          {new Date(trip.createdAt).toLocaleDateString()}
+        </p>
+        {trip.author._id === user._id && (
+          <>
+            <Link to={`/trips/${tripId}/edit`}>Edit Trip</Link>
+            <button onClick={() => props.handleDeleteTrip(tripId)}>Delete</button>
+          </>
+        )}
+      </header>
+      <p>{trip.text}</p>
+
+      <section>
+        <h2>Entry Logs</h2>
+        <LogEntriesList  logEntries={logEntries} />
+        <Link to={`/logEntries/new?tripId=${tripId}`}>Add Log Entry</Link>
+      </section>
+    </main>
+  );
+};
+
+export default TripDetails;

@@ -6,16 +6,19 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import SignupForm from "./components/SignupForm/SignupForm";
 import SigninForm from "./components/SigninForm/SigninForm";
 import TripsList from "./components/TripsList/TripsList";
-import TripDetails from "./components/TripDetails.jsx/TripDetails";
+import TripDetails from "./components/TripDetails/TripDetails";
 import TripForm from "./components/TripForm/TripForm";
+import LogEntriesList from "./components/LogEntriesList/LogEntriesList";
 import * as authService from "../src/services/authService";
 import * as tripService from "../src/services/tripService";
+import * as logEntryService from "../src/services/logEntryService";
 
 export const AuthedUserContext = createContext(null);
 
 const App = () => {
   const [user, setUser] = useState(authService.getUser());
   const [trips, setTrips] = useState([]);
+  const [logEntries, setLogEntries] = useState([]);
   const navigate = useNavigate();
 
   const handleSignout = () => {
@@ -37,7 +40,7 @@ const App = () => {
 
   const handleUpdateTrip = async (tripId, tripFormData) => {
     const updatedTrip = await tripService.updateTrip(tripId, tripFormData);
-    console.log('tripId:',tripId,'tripFormData:',tripFormData)
+    console.log("tripId:", tripId, "tripFormData:", tripFormData);
     setTrips(trips.map((trip) => (tripId === trip._id ? updatedTrip : trip)));
     navigate(`/Trips/${tripId}/`);
   };
@@ -47,7 +50,17 @@ const App = () => {
       const tripsData = await tripService.index();
       setTrips(tripsData);
     };
-    if (user) fetchAllTrips();
+
+    const fetchAllLogs = async () => {
+      const logEntriesData = await logEntryService.indexLogsInTrip();
+      console.log("logEntriesData:", logEntriesData);
+      setLogEntries(logEntriesData);
+    };
+
+    if (user) {
+      fetchAllTrips();
+      fetchAllLogs();
+    }
   }, [user]);
 
   return (
@@ -70,6 +83,10 @@ const App = () => {
               <Route
                 path="/Trips/:tripId/edit"
                 element={<TripForm handleUpdateTrip={handleUpdateTrip} />}
+              />
+              <Route
+                path="/Logs"
+                element={<LogEntriesList logEntries={logEntries} />}
               />
             </>
           ) : (
