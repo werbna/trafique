@@ -1,6 +1,7 @@
 import { AuthedUserContext } from '../../App';
 import { useState, useEffect, useContext } from 'react';
 import { useParams } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import * as tripService from  '../../services/tripService';
 
 const TripDetails = (props) => {
@@ -15,7 +16,7 @@ const TripDetails = (props) => {
       console.log('user:', user);
     }
     fetchTrip();
-  }, [tripId])
+  }, [tripId, user])
 
   console.log('trip state:', trip);
 
@@ -33,6 +34,8 @@ const TripDetails = (props) => {
         {trip.author._id === user._id && (
           
           <>
+          <Link to={`/trips/${tripId}/edit`}>Edit Trip</Link>
+
           <button onClick={() => props.handleDeleteTrip(tripId)}>Delete</button>
           </>
         )}

@@ -35,6 +35,13 @@ const App = () => {
     navigate("/trips");
   };
 
+  const handleUpdateTrip = async (tripId, tripFormData) => {
+    const updatedTrip = await tripService.updateTrip(tripId, tripFormData);
+    console.log('tripId:',tripId,'tripFormData:',tripFormData)
+    setTrips(trips.map((trip) => (tripId === trip._id ? updatedTrip : trip)));
+    navigate(`/Trips/${tripId}/`);
+  };
+
   useEffect(() => {
     const fetchAllTrips = async () => {
       const tripsData = await tripService.index();
@@ -59,6 +66,10 @@ const App = () => {
               <Route
                 path="/Trips/:tripId"
                 element={<TripDetails handleDeleteTrip={handleDeleteTrip} />}
+              />
+              <Route
+                path="/Trips/:tripId/edit"
+                element={<TripForm handleUpdateTrip={handleUpdateTrip} />}
               />
             </>
           ) : (

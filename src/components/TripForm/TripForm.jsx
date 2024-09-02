@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import * as tripService from "../../services/tripService"
 
 const TripForm = (props) => {
+  const { tripId } = useParams();
   const [formData, setFormData] = useState({
-    destination: '',
-    type: 'Vacation',
+    destination: "",
+    type: "Vacation",
   });
 
   const handleChange = (evt) => {
@@ -12,11 +15,24 @@ const TripForm = (props) => {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    props.handleAddTrip(formData);
-  }
+    if (tripId) {
+      props.handleUpdateTrip(tripId, formData)
+    } else {
+      props.handleAddTrip(formData);
+    }
+  };
+
+  useEffect(() => {
+    const fetchTrip = async () => {
+      const tripData = await tripService.show(tripId);
+      setFormData(tripData);
+    };
+    if (tripId) fetchTrip();
+  }, [tripId]);
 
   return (
     <main>
+      <h1>{tripId ? "Edit Trip" : "Create Trip"}</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="destination-input">Destination</label>
         <input
@@ -43,7 +59,7 @@ const TripForm = (props) => {
           <option value="Other">Other</option>
         </select>
 
-        <button type="submit">Create Trip</button>
+        <button type="submit">{tripId ? "Edit Trip" : "Create Trip"}</button>
       </form>
     </main>
   );

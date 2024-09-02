@@ -52,4 +52,20 @@ const deleteTrip = async (tripId) => {
   }
 };
 
-export { index, show, create, deleteTrip };
+async function updateTrip(tripId, tripFormData) {
+  try {
+    const res = await fetch(`${BASE_URL}/${tripId}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(tripFormData),
+    });
+    return res.json();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export { index, show, create, deleteTrip, updateTrip };
