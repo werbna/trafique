@@ -48,6 +48,9 @@ const TripDetails = (props) => {
       <section>
         <h2>Entry Logs</h2>
         <LogEntriesList trip={trip} logEntries={logEntries} />
+        <p>
+          <Link to={`/trips/${tripId}/logEntries/new`}>Create New Log Entry</Link>
+        </p>
       </section>
     </main>
   );

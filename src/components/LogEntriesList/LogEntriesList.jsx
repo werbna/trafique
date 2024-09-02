@@ -1,10 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 const LogEntriesList = (props) => {
+  const { tripId } = useParams();
+  if (!props.logEntries || !Array.isArray(props.logEntries)) {
+    return <main>No log entries found.</main>;
+  }
+
   return (
     <main>
       {props.logEntries.map((logEntry) => (
-        <Link key={logEntry._id} to={`/logEntries/${logEntry._id}`}>
+        <Link key={logEntry._id} to={`/Trips/${tripId}/LogEntries/${logEntry._id}`}>
           <article>
             <header>
               <h2>{logEntry.title}</h2>
@@ -20,6 +25,6 @@ const LogEntriesList = (props) => {
       ))}
     </main>
   );
-}
+};
 
 export default LogEntriesList;

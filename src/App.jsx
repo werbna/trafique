@@ -10,6 +10,7 @@ import TripDetails from "./components/TripDetails/TripDetails";
 import TripForm from "./components/TripForm/TripForm";
 import LogEntriesList from "./components/LogEntriesList/LogEntriesList";
 import LogEntryDetails from "./components/LogEntryDetails/LogEntryDetails";
+import LogEntryForm from "./components/LogEntryForm/LogEntryForm";
 import * as authService from "../src/services/authService";
 import * as tripService from "../src/services/tripService";
 import * as logEntryService from "../src/services/logEntryService";
@@ -34,11 +35,26 @@ const App = () => {
     navigate("/trips");
   };
 
+  const handleAddLogEntry = async  (logEntryFormData) => {
+    const newLogEntry = await logEntryService.createLogEntry(logEntryFormData);
+    setLogEntries([...logEntries, newLogEntry]);
+    navigate(`/trips/${tripId}/log-entries`);
+    };
+
   const handleDeleteTrip = async (tripId) => {
     const deletedTrip = await tripService.deleteTrip(tripId);
     setTrips(trips.filter((trip) => trip._id !== deletedTrip._id));
     navigate("/trips");
   };
+
+  const handleDeleteLogEntry = async (logEntryId) => {
+    const deletedLogEntry = await logEntryService.deleteLogEntry(logEntryId);
+    console.log('logEntryId', logEntryId)
+    setLogEntries(logEntries.filter((logEntry) => logEntry._id !== deletedLogEntry
+    ._id));
+    navigate(`/trips/${tripId}/logEntries`);
+    };
+  
 
   const handleUpdateTrip = async (tripId, tripFormData) => {
     const updatedTrip = await tripService.updateTrip(tripId, tripFormData);
@@ -89,12 +105,16 @@ const App = () => {
                 element={<TripForm handleUpdateTrip={handleUpdateTrip} />}
               />
               <Route
-                path="/LogEntries"
+                path="/Trips/:tripId/LogEntries"
                 element={<LogEntriesList logEntries={logEntries} />}
               />
+              <Route
+                path="/Trips/:tripId/logEntries/new"
+                element={<LogEntryForm handleAddLogEntry={handleAddLogEntry} />}
+              />
               <Route 
-              path="/LogEntries/:logEntryId" 
-              element={<LogEntryDetails logEntries={logEntries}/>} 
+              path="/Trips/:tripId/LogEntries/:logEntryId" 
+              element={<LogEntryDetails handleDeleteLogEntry={handleDeleteLogEntry}/>} 
               />
             </>
           ) : (

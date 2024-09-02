@@ -55,7 +55,7 @@ const TripForm = (props) => {
           <option value="Vacation">Vacation</option>
           <option value="Business">Business</option>
           <option value="Adventure">Adventure</option>
-          <option value="Cultural">Cultural</option>
+          <option value="Family">Family</option>
           <option value="Other">Other</option>
         </select>
 

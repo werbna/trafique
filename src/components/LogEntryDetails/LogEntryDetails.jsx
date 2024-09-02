@@ -1,12 +1,13 @@
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AuthedUserContext } from '../../App';
 import * as logEntryService from  '../../services/logEntryService';
 
 
 const LogEntryDetails = (props) => {
-  const { logEntryId, author } = useParams();
+  const { logEntryId } = useParams();
   const [logEntry, setLogEntry] = useState(null)
-  console.log('LogEntryId', logEntryId)
+  const user = useContext(AuthedUserContext);
 
   useEffect (() => {
     const fetchLogEntry = async () => {
@@ -33,6 +34,13 @@ const LogEntryDetails = (props) => {
       <p>Rating: {logEntry.rating}</p>
       <p>Author: {logEntry.author.username}</p>
       <p>Created At: {new Date(logEntry.createdAt).toLocaleDateString()}</p>
+      {logEntry.author._id === user._id && (
+    <>
+      <button onClick={() => props.handleDeleteLogEntry(logEntryId)}>Delete</button>
+
+
+    </>
+  )}
     </main>
   );
 }
