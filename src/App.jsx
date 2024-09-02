@@ -24,9 +24,14 @@ const App = () => {
   };
 
   const handleAddTrip = async (tripFormData) => {
-    // const newTrip =  await tripService.createTrip(tripFormData);
-    // setTrips([...trips, newTrip]);
-    console.log(tripFormData)
+    const newTrip =  await tripService.createTrip(tripFormData);
+    setTrips([...trips, newTrip]);
+    navigate('/trips')
+  }
+
+  const handleDeleteTrip = async (tripId) => {
+    console.log('tripId', tripId)
+    setTrips(trips.filter((trip) => trip._id !== tripId))
     navigate('/trips')
   }
 
@@ -48,7 +53,7 @@ const App = () => {
             <Route path='/' element={<Dashboard user={user} />} />
             <Route path='/Trips' element={<TripsList trips={trips} />} />
             <Route path="/Trips/New" element={<TripForm handleAddTrip={handleAddTrip} />} />
-            <Route path='/Trips/:tripId' element={<TripDetails />} />
+            <Route path='/Trips/:tripId' element={<TripDetails handleDeleteTrip={handleDeleteTrip} />} />
             </>
           ) : (
             <Route path='/' element={<Landing />} />

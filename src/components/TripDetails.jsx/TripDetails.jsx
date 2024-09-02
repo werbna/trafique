@@ -1,15 +1,18 @@
-import { useEffect, useState } from "react";
+import { AuthedUserContext } from '../../App';
+import { useState, useEffect, useContext } from 'react';
 import { useParams } from "react-router-dom";
 import * as tripService from  '../../services/tripService';
 
 const TripDetails = (props) => {
   const [trip, setTrip] = useState(null);
   const { tripId } = useParams();
+  const { user } = useContext(AuthedUserContext)
 
   useEffect(() => {
     const fetchTrip = async () => {
       const tripData = await tripService.show(tripId)
       setTrip(tripData);
+      console.log('user:', user);
     }
     fetchTrip();
   }, [tripId])
@@ -27,6 +30,12 @@ const TripDetails = (props) => {
           <br></br>
           {new Date(trip.createdAt).toLocaleDateString()}
         </p>
+        {trip.author._id === user._id && (
+          
+          <>
+          <button onClick={() => props.handleDeleteTrip(tripId)}>Delete</button>
+          </>
+        )}
       </header>
       <p>{trip.text}</p>
       <section>
