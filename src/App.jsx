@@ -1,21 +1,42 @@
-import { useState, createContext } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { useState, createContext, useEffect } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import NavBar from './components/NavBar/NavBar';
 import Landing from './components/Landing/Landing';
 import Dashboard from './components/Dashboard/Dashboard';
 import SignupForm from './components/SignupForm/SignupForm';
 import SigninForm from './components/SigninForm/SigninForm';
-import * as authService from '../src/services/authService'; // import the authservice
+import TripsList from './components/TripsList/TripsList';
+import TripDetails from './components/TripDetails.jsx/TripDetails';
+import TripForm from './components/TripForm/TripForm';
+import * as authService from '../src/services/authService';
+import * as tripService  from '../src/services/tripService';
 
 export const AuthedUserContext = createContext(null);
 
 const App = () => {
-  const [user, setUser] = useState(authService.getUser()); // using the method from authservice
+  const [user, setUser] = useState(authService.getUser());
+  const  [trips, setTrips] = useState([]);
+  const navigate = useNavigate();
 
   const handleSignout = () => {
     authService.signout();
     setUser(null);
   };
+
+  const handleAddTrip = async (tripFormData) => {
+    // const newTrip =  await tripService.createTrip(tripFormData);
+    // setTrips([...trips, newTrip]);
+    console.log(tripFormData)
+    navigate('/trips')
+  }
+
+  useEffect(() => {
+    const fetchAllTrips = async () => {
+      const tripsData = await tripService.index();
+      setTrips(tripsData)
+    }
+    if (user) fetchAllTrips();
+  },[user])
 
   return (
     <>
@@ -23,12 +44,17 @@ const App = () => {
         <NavBar user={user} handleSignout={handleSignout} />
         <Routes>
           {user ? (
-            <Route path="/" element={<Dashboard user={user} />} />
+            <>
+            <Route path='/' element={<Dashboard user={user} />} />
+            <Route path='/Trips' element={<TripsList trips={trips} />} />
+            <Route path="/Trips/New" element={<TripForm handleAddTrip={handleAddTrip} />} />
+            <Route path='/Trips/:tripId' element={<TripDetails />} />
+            </>
           ) : (
-            <Route path="/" element={<Landing />} />
+            <Route path='/' element={<Landing />} />
           )}
-          <Route path="/signup" element={<SignupForm setUser={setUser} />} />
-          <Route path="/signin" element={<SigninForm setUser={setUser} />} />
+          <Route path='/signup' element={<SignupForm setUser={setUser} />} />
+          <Route path='/signin' element={<SigninForm setUser={setUser} />} />
         </Routes>
       </AuthedUserContext.Provider>
     </>
