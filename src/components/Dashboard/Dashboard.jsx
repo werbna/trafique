@@ -5,7 +5,8 @@ const Dashboard = () => {
   const user = useContext(AuthedUserContext);
   return (
     <main>
-      <h1>Welcome, {user.user.username}</h1>
+      <img src="../src/assets/TrafLogo.png" alt="Travel Log Logo" />
+      <h1>Welcome {user.user?.username}</h1>
       <p>
         This is the dashboard page where as you can see, your dreams of travel are now a journal. Safe Journeys!
       </p>
