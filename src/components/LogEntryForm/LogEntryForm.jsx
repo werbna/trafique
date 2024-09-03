@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 const LogEntryForm = (props) => {
-  const { tripId,author } = useParams()
+  const { tripId, author } = useParams()
   const [formData, setFormData] = useState({
     title: '',
     content: '',

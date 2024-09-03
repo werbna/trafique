@@ -8,6 +8,7 @@ const index = async () => {
     return res.json();
   } catch (err) {
     console.log(err);
+    throw err
   }
 };
 
@@ -19,6 +20,7 @@ const show = async (tripId) => {
     return res.json();
   } catch (err) {
     console.log(err);
+    throw err
   }
 };
 
@@ -33,8 +35,9 @@ const create = async (tripFormData) => {
       body: JSON.stringify(tripFormData),
     });
     return res.json();
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
+    throw err
   }
 };
 
@@ -47,8 +50,9 @@ const deleteTrip = async (tripId) => {
       },
     });
     return res.json();
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
+    throw err
   }
 };
 
@@ -63,8 +67,9 @@ async function updateTrip(tripId, tripFormData) {
       body: JSON.stringify(tripFormData),
     });
     return res.json();
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
+    throw err
   }
 }
 

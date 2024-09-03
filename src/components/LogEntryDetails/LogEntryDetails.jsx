@@ -4,8 +4,8 @@ import { AuthedUserContext } from '../../App';
 import * as logEntryService from  '../../services/logEntryService';
 
 
-const LogEntryDetails = (props) => {
-  const { logEntryId } = useParams();
+const LogEntryDetails = ({ handleDeleteLogEntry }) => {
+  const { logEntryId, tripId } = useParams();
   const [logEntry, setLogEntry] = useState(null)
   const user = useContext(AuthedUserContext);
 
@@ -36,7 +36,7 @@ const LogEntryDetails = (props) => {
       <p>Created At: {new Date(logEntry.createdAt).toLocaleDateString()}</p>
       {logEntry.author._id === user._id && (
     <>
-      <button onClick={() => props.handleDeleteLogEntry(logEntryId)}>Delete</button>
+      <button onClick={() => handleDeleteLogEntry(logEntryId, tripId)}>Delete</button>
 
 
     </>

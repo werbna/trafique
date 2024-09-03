@@ -14,6 +14,7 @@ const TripDetails = (props) => {
   useEffect(() => {
     const fetchTripDetails = async () => {
       const tripData = await tripService.show(tripId);
+      console.log('tripData', tripData);
       setTrip(tripData);
 
       const logEntries = await logEntryService.indexLogsInTrip(tripId);
@@ -32,11 +33,11 @@ const TripDetails = (props) => {
         <p>{trip.destination}</p>
         <p>{trip.type}</p>
         <p>
-          {trip.author?.username} posted on
+          {trip.author && trip.author.username} posted on
           <br />
           {new Date(trip.createdAt).toLocaleDateString()}
         </p>
-        {trip.author._id === user._id && (
+        {trip.author?._id === user._id && (
           <>
             <Link to={`/trips/${tripId}/edit`}>Edit Trip</Link>
             <button onClick={() => props.handleDeleteTrip(tripId)}>Delete</button>

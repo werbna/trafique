@@ -21,7 +21,7 @@ const App = () => {
   const [user, setUser] = useState(authService.getUser());
   const [trips, setTrips] = useState([]);
   const [logEntries, setLogEntries] = useState([]);
-  const { tripId }  = useParams();
+  const { tripId } = useParams();
   const navigate = useNavigate();
 
   const handleSignout = () => {
@@ -32,29 +32,29 @@ const App = () => {
   const handleAddTrip = async (tripFormData) => {
     const newTrip = await tripService.create(tripFormData);
     setTrips([...trips, newTrip]);
-    navigate("/trips");
+    navigate("/Trips");
   };
 
-  const handleAddLogEntry = async  (logEntryFormData) => {
+  const handleAddLogEntry = async (logEntryFormData, tripId) => {
     const newLogEntry = await logEntryService.createLogEntry(logEntryFormData);
     setLogEntries([...logEntries, newLogEntry]);
-    navigate(`/trips/${tripId}/log-entries`);
-    };
+    navigate(`/Trips/${tripId}`);
+  };
 
   const handleDeleteTrip = async (tripId) => {
     const deletedTrip = await tripService.deleteTrip(tripId);
     setTrips(trips.filter((trip) => trip._id !== deletedTrip._id));
-    navigate("/trips");
+    navigate("/Trips");
   };
 
-  const handleDeleteLogEntry = async (logEntryId) => {
+  const handleDeleteLogEntry = async (logEntryId, tripId) => {
     const deletedLogEntry = await logEntryService.deleteLogEntry(logEntryId);
-    console.log('logEntryId', logEntryId)
-    setLogEntries(logEntries.filter((logEntry) => logEntry._id !== deletedLogEntry
-    ._id));
-    navigate(`/trips/${tripId}/logEntries`);
-    };
-  
+    console.log("logEntryId", logEntryId);
+    setLogEntries(
+      logEntries.filter((logEntry) => logEntry._id !== deletedLogEntry._id)
+    );
+    navigate(`/Trips/${tripId}`);
+  };
 
   const handleUpdateTrip = async (tripId, tripFormData) => {
     const updatedTrip = await tripService.updateTrip(tripId, tripFormData);
@@ -68,7 +68,7 @@ const App = () => {
       const tripsData = await tripService.index();
       setTrips(tripsData);
     };
-  
+
     const fetchLogs = async () => {
       if (tripId) {
         const logEntriesData = await logEntryService.indexLogsInTrip(tripId);
@@ -76,7 +76,7 @@ const App = () => {
         setLogEntries(logEntriesData);
       }
     };
-  
+
     if (user) {
       fetchAllTrips();
       fetchLogs();
@@ -91,7 +91,10 @@ const App = () => {
           {user ? (
             <>
               <Route path="/" element={<Dashboard user={user} />} />
-              <Route path="/Trips" element={<TripsList trips={trips} logEntries={logEntries} />} />
+              <Route
+                path="/Trips"
+                element={<TripsList trips={trips} logEntries={logEntries} />}
+              />
               <Route
                 path="/Trips/New"
                 element={<TripForm handleAddTrip={handleAddTrip} />}
@@ -106,15 +109,29 @@ const App = () => {
               />
               <Route
                 path="/Trips/:tripId/LogEntries"
-                element={<LogEntriesList logEntries={logEntries} />}
+                element={
+                  <LogEntriesList 
+                    tripId={tripId} 
+                    logEntries={logEntries} />
+                }
               />
               <Route
                 path="/Trips/:tripId/logEntries/new"
-                element={<LogEntryForm handleAddLogEntry={handleAddLogEntry} />}
+                element={
+                  <LogEntryForm
+                    tripId={tripId}
+                    handleAddLogEntry={handleAddLogEntry}
+                  />
+                }
               />
-              <Route 
-              path="/Trips/:tripId/LogEntries/:logEntryId" 
-              element={<LogEntryDetails handleDeleteLogEntry={handleDeleteLogEntry}/>} 
+              <Route
+                path="/Trips/:tripId/LogEntries/:logEntryId"
+                element={
+                  <LogEntryDetails
+                    tripId={tripId}
+                    handleDeleteLogEntry={handleDeleteLogEntry}
+                  />
+                }
               />
             </>
           ) : (
