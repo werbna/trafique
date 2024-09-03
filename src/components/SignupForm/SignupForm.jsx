@@ -7,8 +7,13 @@ const SignupForm = (props) => {
   const [message, setMessage] = useState(['']);
   const [formData, setFormData] = useState({
     username: '',
+    email: '',
+    firstName: '',
+    lastName: '',
     password: '',
     passwordConf: '',
+    profilePicture: '',
+    bio: '',
   });
 
   const updateMessage = (msg) => {
@@ -30,10 +35,10 @@ const SignupForm = (props) => {
     }
   };
 
-  const { username, password, passwordConf } = formData;
+  const { username, email, firstName, lastName, password, passwordConf, profilePicture, bio } = formData;
 
   const isFormInvalid = () => {
-    return !(username && password && password === passwordConf);
+    return !(username && email && firstName && lastName && password && password === passwordConf);
   };
 
   return (
@@ -45,9 +50,39 @@ const SignupForm = (props) => {
           <label htmlFor="username">Username:</label>
           <input
             type="text"
-            id="name"
+            id="username"
             value={username}
             name="username"
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            name="email"
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="firstName">First Name:</label>
+          <input
+            type="text"
+            id="firstName"
+            value={firstName}
+            name="firstName"
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="lastName">Last Name:</label>
+          <input
+            type="text"
+            id="lastName"
+            value={lastName}
+            name="lastName"
             onChange={handleChange}
           />
         </div>
@@ -68,6 +103,16 @@ const SignupForm = (props) => {
             id="confirm"
             value={passwordConf}
             name="passwordConf"
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label htmlFor="profilePicture">Profile Picture (URL):</label>
+          <input
+            type="text"
+            id="profilePicture"
+            value={profilePicture}
+            name="profilePicture"
             onChange={handleChange}
           />
         </div>

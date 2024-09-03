@@ -1,6 +1,6 @@
-# Travel Log - Frontend
+# Trafique - Frontend
 
-Travel Log is a web application that allows users to document their travels by creating trips, log entries, and associating photos and comments with their trips.
+Trafique is a web application that allows users to document their travels by creating trips, log entries, and eventually associating photos and comments with their trips.
 
 ## Deployment Link
 <a href='https://your-frontend-deployment-link.com/'>https://your-frontend-deployment-link.com/</a>
