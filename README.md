@@ -3,7 +3,7 @@
 Trafique is a web application that allows users to document their travels by creating trips, log entries, and eventually associating photos and comments with their trips.
 
 ## Deployment Link
-<a href='https://your-frontend-deployment-link.com/'>https://your-frontend-deployment-link.com/</a>
+<a href='https://trafique.netlify.app/'>https://trafique.netlify.app//</a>
 
 ## Screenshots
 <img src="https://i.imgur.com/8FE2NeH.png">
@@ -15,6 +15,7 @@ Trafique is a web application that allows users to document their travels by cre
 ![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/7b17d32d-bf1a-43f2-b141-81457d09e6a2/deploy-status)](https://app.netlify.com/sites/trafique/deploys)
 
 
 ## Features
