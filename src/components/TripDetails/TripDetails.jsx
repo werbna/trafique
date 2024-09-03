@@ -13,12 +13,16 @@ const TripDetails = (props) => {
 
   useEffect(() => {
     const fetchTripDetails = async () => {
-      const tripData = await tripService.show(tripId);
-      console.log('tripData', tripData);
-      setTrip(tripData);
-
-      const logEntries = await logEntryService.indexLogsInTrip(tripId);
-      setLogEntries(logEntries);
+      try {
+        const tripData = await tripService.show(tripId);
+        console.log('tripData', tripData);
+        setTrip(tripData);
+  
+        const logEntries = await logEntryService.indexLogsInTrip(tripId);
+        setLogEntries(logEntries);
+      } catch (error) {
+        console.error('Error fetching trip details:', error);
+      }
     };
     if (user) {
       fetchTripDetails();

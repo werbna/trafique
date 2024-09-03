@@ -2,12 +2,11 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 const LogEntryForm = (props) => {
-  const { tripId, author } = useParams()
+  const { tripId } = useParams();
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     rating: 1,
-    author: author, 
     trip: tripId,
   });
 
@@ -18,7 +17,11 @@ const LogEntryForm = (props) => {
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    props.handleAddLogEntry(formData)
+    if (formData.title && formData.content) {
+      props.handleAddLogEntry(formData);
+    } else {
+      console.error('Please fill in all fields');
+    }
   };
 
   return (
@@ -52,18 +55,6 @@ const LogEntryForm = (props) => {
           <option value="5">5</option>
         </select>
       </label>
-      <br />
-      <label>
-        Author:
-        <input
-          type="text"
-          name="author"
-          value={formData.author}
-          onChange={handleChange}
-          readOnly
-        />
-      </label>
-      <br />
       <br />
       <button type="submit">Submit</button>
     </form>

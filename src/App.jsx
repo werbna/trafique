@@ -35,10 +35,10 @@ const App = () => {
     navigate("/Trips");
   };
 
-  const handleAddLogEntry = async (logEntryFormData, tripId) => {
+  const handleAddLogEntry = async (logEntryFormData) => {
     const newLogEntry = await logEntryService.createLogEntry(logEntryFormData);
     setLogEntries([...logEntries, newLogEntry]);
-    navigate(`/Trips/${tripId}`);
+    navigate(`/Trips/${logEntryFormData.trip}`);
   };
 
   const handleDeleteTrip = async (tripId) => {
