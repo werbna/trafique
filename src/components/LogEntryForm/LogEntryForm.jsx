@@ -1,14 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import * as logEntryService from  '../../services/logEntryService';
 
 const LogEntryForm = (props) => {
-  const { tripId } = useParams();
+  const { tripId, logEntryId } = useParams();
   const [formData, setFormData] = useState({
     title: '',
     content: '',
     rating: 1,
     trip: tripId,
   });
+
+  useEffect(() => {
+    if (logEntryId) {
+      const fetchLogEntry = async () => {
+        const logEntryData = await logEntryService.showLogEntry(logEntryId);
+        setFormData(logEntryData);
+      };
+      fetchLogEntry();
+    }
+  }, [logEntryId]);
 
   const handleChange = (evt) => {
     const { name, value } = evt.target;
@@ -18,7 +29,11 @@ const LogEntryForm = (props) => {
   const handleSubmit = (evt) => {
     evt.preventDefault();
     if (formData.title && formData.content) {
-      props.handleAddLogEntry(formData);
+      if (logEntryId) {
+        props.handleUpdateLogEntry(logEntryId, formData);
+      } else {
+        props.handleAddLogEntry(formData);
+      }
     } else {
       console.error('Please fill in all fields');
     }
@@ -26,6 +41,7 @@ const LogEntryForm = (props) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <h1>{logEntryId ? 'Edit Log Entry' : 'New Log Entry'}</h1>
       <label>
         Title:
         <input

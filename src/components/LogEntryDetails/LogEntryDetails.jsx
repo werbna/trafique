@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useContext } from 'react';
 import { AuthedUserContext } from '../../App';
+import { Link } from "react-router-dom";
 import * as logEntryService from  '../../services/logEntryService';
 
 
@@ -38,7 +39,7 @@ const LogEntryDetails = ({ handleDeleteLogEntry }) => {
     <>
       <button onClick={() => handleDeleteLogEntry(logEntryId, tripId)}>Delete</button>
 
-
+      <Link to={`/trips/${tripId}/logEntries/${logEntryId}/edit`}>Edit</Link>
     </>
   )}
     </main>

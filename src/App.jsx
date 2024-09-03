@@ -63,6 +63,14 @@ const App = () => {
     navigate(`/Trips/${tripId}/`);
   };
 
+  const handleUpdateLogEntry = async (logEntryId, logEntryFormData) => {
+    const updatedLogEntry = await logEntryService.updateLogEntry(logEntryId, logEntryFormData);
+    setLogEntries(
+      logEntries.map((logEntry) => (logEntry._id === logEntryId ? updatedLogEntry : logEntry))
+    );
+    navigate(`/Trips/${logEntryFormData.trip}`);
+  };
+
   useEffect(() => {
     const fetchAllTrips = async () => {
       const tripsData = await tripService.index();
@@ -112,8 +120,7 @@ const App = () => {
                 element={
                   <LogEntriesList 
                     tripId={tripId} 
-                    logEntries={logEntries} />
-                }
+                    logEntries={logEntries} />}
               />
               <Route
                 path="/Trips/:tripId/logEntries/new"
@@ -121,8 +128,7 @@ const App = () => {
                   <LogEntryForm
                     tripId={tripId}
                     handleAddLogEntry={handleAddLogEntry}
-                  />
-                }
+                  />}
               />
               <Route
                 path="/Trips/:tripId/LogEntries/:logEntryId"
@@ -130,9 +136,16 @@ const App = () => {
                   <LogEntryDetails
                     tripId={tripId}
                     handleDeleteLogEntry={handleDeleteLogEntry}
-                  />
-                }
+                  />}
               />
+              <Route
+              path="/Trips/:tripId/LogEntries/:logEntryId/edit"
+              element={
+                <LogEntryForm
+                tripId={tripId}
+                handleUpdateLogEntry={handleUpdateLogEntry}
+                />}
+                />
             </>
           ) : (
             <Route path="/" element={<Landing />} />
