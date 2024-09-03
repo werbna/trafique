@@ -6,8 +6,8 @@ Travel Log is a web application that allows users to document their travels by c
 <a href='https://your-frontend-deployment-link.com/'>https://your-frontend-deployment-link.com/</a>
 
 ## Screenshots
-<img src="https://your-screenshot-link-1.png">
-<img src="https://your-screenshot-link-2.png">
+<img src="https://i.imgur.com/8FE2NeH.png">
+<img src="https://i.imgur.com/Kerldxq.png">
 
 ## Technologies
 ![React](https://img.shields.io/badge/React-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
