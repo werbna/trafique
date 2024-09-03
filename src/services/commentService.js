@@ -1,30 +1,29 @@
 const BASE_URL = `${import.meta.env.VITE_EXPRESS_BACKEND_URL}/comments`;
 
 const indexComments = async (logEntryId) => {
+  if (!logEntryId) {
+    throw new Error("logEntryId is required");
+  }
   try {
+    console.log(`Making request to ${BASE_URL}/${logEntryId}`);
     const res = await fetch(`${BASE_URL}/${logEntryId}`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
     });
-    return res.json();
+    console.log(`Response status: ${res.status}`);
+    const commentsData = await res.json();
+    console.log(`commentsData:`, commentsData);
+    return commentsData;
   } catch (err) {
     console.log(err);
   }
 };
 
-const showComment = async (commentId) => {
-  try {
-    const res = await fetch(`${BASE_URL}/${commentId}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
-    return res.json();
-  } catch (err) {
-    console.log(err);
+const createComment = async (logEntryId, commentFormData) => {
+  if (!logEntryId) {
+    throw new Error("logEntryId is required");
   }
-};
-
-const createComment = async (commentFormData) => {
   try {
-    const res = await fetch(`${BASE_URL}/${commentFormData.logEntry}`, {
+    const res = await fetch(`${BASE_URL}/${logEntryId}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -38,21 +37,10 @@ const createComment = async (commentFormData) => {
   }
 };
 
-const deleteComment = async (commentId) => {
-  try {
-    const res = await fetch(`${BASE_URL}/${commentId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-    return res.json();
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const updateComment = async (commentId, commentFormData) => {
+  if (!commentId) {
+    throw new Error("commentId is required");
+  }
   try {
     const res = await fetch(`${BASE_URL}/${commentId}`, {
       method: "PUT",
@@ -68,4 +56,21 @@ const updateComment = async (commentId, commentFormData) => {
   }
 };
 
-export { indexComments, showComment, createComment, deleteComment, updateComment };
+const deleteComment = async (commentId) => {
+  if (!commentId) {
+    throw new Error("commentId is required");
+  }
+  try {
+    const res = await fetch(`${BASE_URL}/${commentId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return res.json();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { indexComments, createComment, updateComment, deleteComment };

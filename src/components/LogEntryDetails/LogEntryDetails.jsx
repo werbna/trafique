@@ -2,8 +2,8 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect, useContext } from 'react';
 import { AuthedUserContext } from '../../App';
 import { Link } from "react-router-dom";
+import CommentsList from "../CommentLists/CommentLists";
 import * as logEntryService from  '../../services/logEntryService';
-
 
 const LogEntryDetails = ({ handleDeleteLogEntry }) => {
   const { logEntryId, tripId } = useParams();
@@ -14,7 +14,6 @@ const LogEntryDetails = ({ handleDeleteLogEntry }) => {
     const fetchLogEntry = async () => {
       try {
         const logEntryData = await logEntryService.showLogEntry(logEntryId);
-        console.log('logEntryData', logEntryData)
         setLogEntry(logEntryData);
       } catch (error) {
         console.error(error);
@@ -35,13 +34,16 @@ const LogEntryDetails = ({ handleDeleteLogEntry }) => {
       <p>Rating: {logEntry.rating}</p>
       <p>Author: {logEntry.author.username}</p>
       <p>Created At: {new Date(logEntry.createdAt).toLocaleDateString()}</p>
+      
       {logEntry.author._id === user._id && (
     <>
       <button onClick={() => handleDeleteLogEntry(logEntryId, tripId)}>Delete</button>
 
       <Link to={`/trips/${tripId}/logEntries/${logEntryId}/edit`}>Edit</Link>
     </>
+    
   )}
+  <CommentsList logEntryId={logEntryId} logEntryData={logEntry} />
     </main>
   );
 }

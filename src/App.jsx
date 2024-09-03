@@ -11,9 +11,11 @@ import TripForm from "./components/TripForm/TripForm";
 import LogEntriesList from "./components/LogEntriesList/LogEntriesList";
 import LogEntryDetails from "./components/LogEntryDetails/LogEntryDetails";
 import LogEntryForm from "./components/LogEntryForm/LogEntryForm";
+import CommentsList from "./components/CommentLists/CommentLists";
 import * as authService from "../src/services/authService";
 import * as tripService from "../src/services/tripService";
 import * as logEntryService from "../src/services/logEntryService";
+import * as commentService from "../src/services/commentService";
 
 export const AuthedUserContext = createContext(null);
 
@@ -21,7 +23,8 @@ const App = () => {
   const [user, setUser] = useState(authService.getUser());
   const [trips, setTrips] = useState([]);
   const [logEntries, setLogEntries] = useState([]);
-  const { tripId } = useParams();
+  const [comments, setComments] = useState([])
+  const { tripId,logEntryId } = useParams();
   const navigate = useNavigate();
 
   const handleSignout = () => {
@@ -64,9 +67,14 @@ const App = () => {
   };
 
   const handleUpdateLogEntry = async (logEntryId, logEntryFormData) => {
-    const updatedLogEntry = await logEntryService.updateLogEntry(logEntryId, logEntryFormData);
+    const updatedLogEntry = await logEntryService.updateLogEntry(
+      logEntryId,
+      logEntryFormData
+    );
     setLogEntries(
-      logEntries.map((logEntry) => (logEntry._id === logEntryId ? updatedLogEntry : logEntry))
+      logEntries.map((logEntry) =>
+        logEntry._id === logEntryId ? updatedLogEntry : logEntry
+      )
     );
     navigate(`/Trips/${logEntryFormData.trip}`);
   };
@@ -80,16 +88,23 @@ const App = () => {
     const fetchLogs = async () => {
       if (tripId) {
         const logEntriesData = await logEntryService.indexLogsInTrip(tripId);
-        console.log("logEntriesData:", logEntriesData);
+        // console.log("logEntriesData:", logEntriesData);
         setLogEntries(logEntriesData);
       }
     };
 
+    const fetchComments = async () => {
+    const commentsData = await commentService.indexComments(logEntryId)
+    console.log("commentsData:", commentsData)
+    setComments(commentsData)
+    }
+
     if (user) {
       fetchAllTrips();
       fetchLogs();
+      // fetchComments();
     }
-  }, [user, tripId]);
+  }, [user, tripId, logEntryId]);
 
   return (
     <>
@@ -118,9 +133,8 @@ const App = () => {
               <Route
                 path="/Trips/:tripId/LogEntries"
                 element={
-                  <LogEntriesList 
-                    tripId={tripId} 
-                    logEntries={logEntries} />}
+                  <LogEntriesList tripId={tripId} logEntries={logEntries} />
+                }
               />
               <Route
                 path="/Trips/:tripId/logEntries/new"
@@ -128,7 +142,8 @@ const App = () => {
                   <LogEntryForm
                     tripId={tripId}
                     handleAddLogEntry={handleAddLogEntry}
-                  />}
+                  />
+                }
               />
               <Route
                 path="/Trips/:tripId/LogEntries/:logEntryId"
@@ -136,16 +151,21 @@ const App = () => {
                   <LogEntryDetails
                     tripId={tripId}
                     handleDeleteLogEntry={handleDeleteLogEntry}
-                  />}
+                  />
+                }
               />
               <Route
-              path="/Trips/:tripId/LogEntries/:logEntryId/edit"
-              element={
-                <LogEntryForm
-                tripId={tripId}
-                handleUpdateLogEntry={handleUpdateLogEntry}
-                />}
-                />
+                path="/Trips/:tripId/LogEntries/:logEntryId/edit"
+                element={
+                  <LogEntryForm
+                    tripId={tripId}
+                    handleUpdateLogEntry={handleUpdateLogEntry}
+                  />
+                }
+              />
+              <Route path='/logEntry/:logEntryId/Comments'
+              element={<CommentsList  logEntryId={logEntryId} comments={comments} />}
+              />
             </>
           ) : (
             <Route path="/" element={<Landing />} />
