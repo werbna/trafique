@@ -23,7 +23,7 @@ Trafique is a web application that allows users to document their travels by cre
 - User authentication (sign up, sign in, sign out)
 - View, add, edit, and delete trips
 - View, add, edit, and delete log entries
-- Future implementation: View, add, edit, and delete photos and comments
+- Future implementation: View, add, edit, and delete photos and comments, Profile Views.
 
 
 ## Folder Structure
